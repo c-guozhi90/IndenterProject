@@ -1,9 +1,11 @@
 package raven.wordprocess;
 
+import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Stack;
+import java.util.logging.Logger;
 
 /**
  * This class is for processing sql language
@@ -13,14 +15,12 @@ public class Parser implements Runnable {
     private Stack<String> keywordStack;
     private FileProcess fileProcess;
     private HashMap<String, String[]> keywordsPairs;
-    private String[] startKeys;
-    private boolean startWordFound;
 
-    public Parser() throws IOException {
+    public Parser(String filePath) throws IOException {
         initKeywordsPairs();
         keywordStack = new Stack<>();
 
-        fileProcess = new FileProcess(new File(""));
+        fileProcess = new FileProcess(new File(filePath));
 
     }
 
@@ -31,7 +31,6 @@ public class Parser implements Runnable {
         String[] words = fileProcess.extractWords();
         if (keywordsPairs.containsKey(words[0])) { // only examine the first word of each line
             keywordStack.push(words[0]);
-            startWordFound = true;
         }
     }
 
@@ -63,6 +62,20 @@ public class Parser implements Runnable {
 
     @Override
     public void run() {
+        try {
+            while (true) {
+                findStartWord();
+                findEndWord();
+                fileProcess.insStringHead('\t', keywordStack.size());
 
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println(e.getClass().getSimpleName());// can the program catch an EOFException?
+            if (e instanceof EOFException) {
+                // todo replace the target file with temp file
+                fileProcess.close();
+            }
+        }
     }
 }

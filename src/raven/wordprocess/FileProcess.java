@@ -10,6 +10,7 @@ public class FileProcess {
     private BufferedReader br;
     private File curFile;
     private String toWriteStr;
+    private String curLine;
 
     public FileProcess(File curFile) throws IOException {
         if (!curFile.isFile()) {
@@ -27,7 +28,7 @@ public class FileProcess {
      * @param c     what character should be inserted, the default character is \t.
      * @param count how many times that the character should be inserted.
      */
-    public static void insStringHead(char c, int count) {
+    public void insStringHead(char c, int count) {
         for (int insTimes = 0; insTimes < count; insTimes++) {
 
         }
@@ -55,7 +56,11 @@ public class FileProcess {
      * @return the words seperated by spaces
      */
     public String[] extractWords() throws IOException {
-        String[] results = br.readLine().trim().split(" ");
+        curLine = br.readLine();
+        if (curLine == null) {
+            throw new EOFException();
+        }
+        String[] results = curLine.trim().split(" ");
         return results;
     }
 
@@ -63,6 +68,19 @@ public class FileProcess {
      * Extract one line string without splitting
      */
     public String extractLine() throws IOException {
-        return br.readLine();
+        curLine = br.readLine();
+        if (curLine == null) {
+            throw new EOFException();
+        }
+        return curLine;
+    }
+
+    public void close() {
+        try {
+            br.close();
+            bw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
