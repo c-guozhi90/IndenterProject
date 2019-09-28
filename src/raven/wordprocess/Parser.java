@@ -9,7 +9,7 @@ import java.util.Stack;
  * This class is for processing sql language
  * the keywords in sql are begin, declare, end, for, if and so on
  */
-public class Parser {
+public class Parser implements Runnable {
     private Stack<String> keywordStack;
     private FileProcess fileProcess;
     private HashMap<String, String[]> keywordsPairs;
@@ -59,5 +59,10 @@ public class Parser {
         keywordsPairs.put("loop", new String[]{"end loop"});
         keywordsPairs.put("\"", new String[]{"\""});
         keywordsPairs.put("\'", new String[]{"\'"});
+    }
+
+    @Override
+    public void run() {
+
     }
 }

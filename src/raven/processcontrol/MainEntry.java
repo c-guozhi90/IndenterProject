@@ -1,17 +1,23 @@
 package raven.processcontrol;
 
-import raven.wordprocess.FileProcess;
+import raven.processinterface.MainWindow;
 import raven.wordprocess.Parser;
 
-import java.io.IOException;
+import javax.swing.*;
 
 public class MainEntry {
 
+    private String filePath;
+    private MainWindow mainWindow;
+
     public static void main(String[] args) {
-        try {
-            Parser parser = new Parser();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        MainEntry mainEntry = new MainEntry();
+
+        // Init the ui thread
+        SwingUtilities.invokeLater(() -> {
+            mainEntry.mainWindow = new MainWindow();
+        });
     }
+
 }

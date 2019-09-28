@@ -4,7 +4,7 @@ import java.io.*;
 
 public class FileProcess {
     /**
-     * insert specified character the head of a string
+     * Insert specified character the head of a string
      */
     private BufferedWriter bw;
     private BufferedReader br;
