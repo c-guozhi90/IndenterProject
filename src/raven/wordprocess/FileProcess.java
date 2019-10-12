@@ -1,6 +1,7 @@
 package raven.wordprocess;
 
 import java.io.*;
+import java.util.Stack;
 
 public class FileProcess {
     /**
@@ -9,8 +10,8 @@ public class FileProcess {
     private BufferedWriter bw;
     private BufferedReader br;
     private File curFile;
-    private String toWriteStr;
     private String curLine;
+    private String BufferString;
 
     public FileProcess(File curFile) throws IOException {
         if (!curFile.isFile()) {
@@ -25,12 +26,20 @@ public class FileProcess {
      * Insert specified character into the head of each line. If the keyword stack is empty, insert zero character.
      * If the keyword stack has one element, insert one character; et cetera.
      *
-     * @param c     what character should be inserted, the default character is \t.
-     * @param count how many times that the character should be inserted.
+     * @param c             Specified the character to be inserted, the default character should be \t.
+     * @param keywordsStack the stack that storing keywords
      */
-    public void insStringHead(char c, int count) {
-        for (int insTimes = 0; insTimes < count; insTimes++) {
+    public void insStringHead(char c, Stack<String> keywordsStack) {
+        int count;
+        String topKeyword = keywordsStack.peek();
+        if (curLine.indexOf(topKeyword) > 0) {
+            count = keywordsStack.size() - 1;
+        } else {
+            count = keywordsStack.size();
+        }
 
+        for (int insTimes = 0; insTimes < count; insTimes++) {
+            curLine = c + curLine;
         }
     }
 
@@ -82,5 +91,13 @@ public class FileProcess {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public String getCurLine() {
+        return this.curLine;
+    }
+
+    private boolean isEmptyLine(String line) {
+        return line.equals("\n");
     }
 }
